@@ -18,6 +18,7 @@ class Pomodoro extends EventEmitter {
         this.remainingTime--
         this.updateUI()
       } else {
+        this.handleEnd()
         this.reset()
       }
     }, 1000)
@@ -58,6 +59,10 @@ class Pomodoro extends EventEmitter {
     const { minutes, seconds } = this.remainingTimeObject()
 
     return `${minutes.toString().padStart(2, 0)}:${seconds.toString().padStart(2, 0)}`
+  }
+
+  handleEnd() {
+    this.emit('end')
   }
 }
 

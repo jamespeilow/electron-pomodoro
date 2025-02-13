@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain, Tray, Menu, nativeImage } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, Tray, Menu, nativeImage, Notification } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
@@ -121,6 +121,19 @@ app.whenReady().then(() => {
 
     if (tray) {
       tray.setTitle(payload.formatted)
+    }
+  })
+
+  pomodoroTimer.on('end', () => {
+    console.log('pomodoro ended')
+
+    if (Notification.isSupported()) {
+      const notification = new Notification({
+        title: 'Pomodoro Complete! ✅',
+        body: 'Great job! Time for a break.',
+        sound: 'Glass.aiff'
+      })
+      notification.show()
     }
   })
 })
