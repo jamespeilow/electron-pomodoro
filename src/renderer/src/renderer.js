@@ -24,9 +24,8 @@ function initPomodoro() {
 
   window.api.pomodoro.onTimerUpdate((payload) => {
     console.log('onTimerUpdate')
-    const { minutes, seconds } = payload
 
-    timerOutput.innerHTML = `${minutes.toString().padStart(2, 0)}:${seconds.toString().padStart(2, 0)}`
+    timerOutput.innerHTML = payload.formatted
   })
 }
 

@@ -6,10 +6,11 @@ import createPomodoro from '../components/pomodoro'
 
 let pomodoroTimer
 let tray
+let mainWindow
 
 function createWindow() {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
     show: false,
@@ -24,9 +25,6 @@ function createWindow() {
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
-
-  // Initialize pomodoro
-  pomodoroTimer = createPomodoro(mainWindow)
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
@@ -92,6 +90,9 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
+  // Initialize pomodoro
+  pomodoroTimer = createPomodoro()
+
   createWindow()
   createTray()
 
@@ -105,6 +106,13 @@ app.whenReady().then(() => {
   ipcMain.on('pomodoro:start', () => pomodoroTimer.start())
   ipcMain.on('pomodoro:pause', () => pomodoroTimer.pause())
   ipcMain.on('pomodoro:reset', () => pomodoroTimer.reset())
+
+  // Handle Pomodoro Events
+  pomodoroTimer.on('update', (payload) => {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('pomodoro:update', payload)
+    }
+  })
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common

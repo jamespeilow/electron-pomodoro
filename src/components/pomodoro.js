@@ -1,6 +1,7 @@
-class Pomodoro {
-  constructor(mainWindow) {
-    this.mainWindow = mainWindow
+import { EventEmitter } from 'events'
+class Pomodoro extends EventEmitter {
+  constructor() {
+    super()
     this.defaultTime = 25 * 60
     this.remainingTime = this.defaultTime
     this.interval = null
@@ -46,9 +47,11 @@ class Pomodoro {
   }
 
   updateUI() {
-    if (this.mainWindow && !this.mainWindow.isDestroyed()) {
-      this.mainWindow.webContents.send('pomodoro:update', this.remainingTimeObject())
+    const payload = {
+      data: this.remainingTimeObject(),
+      formatted: this.formatTime()
     }
+    this.emit('update', payload)
   }
 
   formatTime() {
