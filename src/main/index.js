@@ -5,7 +5,13 @@ import icon from '../../resources/icon.png?asset'
 import createPomodoro from '../components/pomodoro'
 
 let pomodoroTimer
+/**
+ * @type {Tray | null}
+ */
 let tray
+/**
+ * @type {BrowserWindow | null}
+ */
 let mainWindow
 
 function createWindow() {
@@ -111,6 +117,10 @@ app.whenReady().then(() => {
   pomodoroTimer.on('update', (payload) => {
     if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.webContents.send('pomodoro:update', payload)
+    }
+
+    if (tray) {
+      tray.setTitle(payload.formatted)
     }
   })
 })
