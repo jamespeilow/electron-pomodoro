@@ -1,7 +1,17 @@
 import { contextBridge, ipcRenderer } from 'electron'
 
 // Custom APIs for renderer
-const api = {}
+const api = {
+  pomodoro: {
+    start: () => ipcRenderer.send('pomodoro:start'),
+    pause: () => ipcRenderer.send('pomodoro:pause'),
+    reset: () => ipcRenderer.send('pomodoro:reset'),
+    onTimerUpdate: (callback) =>
+      ipcRenderer.on('pomodoro:update', (_event, payload) => {
+        callback(payload)
+      })
+  }
+}
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise

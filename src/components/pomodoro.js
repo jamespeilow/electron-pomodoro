@@ -1,8 +1,10 @@
 class Pomodoro {
-  constructor() {
+  constructor(mainWindow) {
+    this.mainWindow = mainWindow
     this.defaultTime = 25 * 60
     this.remainingTime = this.defaultTime
     this.interval = null
+    this.updateUI()
   }
 
   start() {
@@ -13,6 +15,7 @@ class Pomodoro {
     this.interval = setInterval(() => {
       if (this.remainingTime > 0) {
         this.remainingTime--
+        this.updateUI()
       } else {
         this.reset()
       }
@@ -29,9 +32,10 @@ class Pomodoro {
   reset() {
     this.pause()
     this.remainingTime = this.defaultTime
+    this.updateUI()
   }
 
-  remainingTimeToObject() {
+  remainingTimeObject() {
     const minutes = Math.floor(this.remainingTime / 60)
     const seconds = this.remainingTime % 60
 
@@ -41,15 +45,21 @@ class Pomodoro {
     }
   }
 
+  updateUI() {
+    if (this.mainWindow && !this.mainWindow.isDestroyed()) {
+      this.mainWindow.webContents.send('pomodoro:update', this.remainingTimeObject())
+    }
+  }
+
   formatTime() {
-    const { minutes, seconds } = this.remainingTimeToObject()
+    const { minutes, seconds } = this.remainingTimeObject()
 
     return `${minutes.toString().padStart(2, 0)}:${seconds.toString().padStart(2, 0)}`
   }
 }
 
-function createPomodoro() {
-  return new Pomodoro()
+function createPomodoro(mainWindow) {
+  return new Pomodoro(mainWindow)
 }
 
 export default createPomodoro

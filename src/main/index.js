@@ -2,6 +2,9 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import createPomodoro from '../components/pomodoro'
+
+let pomodoroTimer
 
 function createWindow() {
   // Create the browser window.
@@ -20,6 +23,9 @@ function createWindow() {
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
   })
+
+  // Initialize pomodoro
+  pomodoroTimer = createPomodoro(mainWindow)
 
   mainWindow.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url)
@@ -59,6 +65,11 @@ app.whenReady().then(() => {
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+
+  // Handle IPC events
+  ipcMain.on('pomodoro:start', () => pomodoroTimer.start())
+  ipcMain.on('pomodoro:pause', () => pomodoroTimer.pause())
+  ipcMain.on('pomodoro:reset', () => pomodoroTimer.reset())
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common

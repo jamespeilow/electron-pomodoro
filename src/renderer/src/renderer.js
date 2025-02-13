@@ -1,6 +1,32 @@
 function init() {
   window.addEventListener('DOMContentLoaded', () => {
     doAThing()
+
+    initPomodoro()
+  })
+}
+
+function initPomodoro() {
+  const pauseButton = document.querySelector('button[data-action=pause]')
+  const startButton = document.querySelector('button[data-action=start]')
+  const resetButton = document.querySelector('button[data-action=reset]')
+  const timerOutput = document.querySelector('.timer')
+
+  pauseButton.addEventListener('click', () => {
+    window.api.pomodoro.pause()
+  })
+  startButton.addEventListener('click', () => {
+    window.api.pomodoro.start()
+  })
+  resetButton.addEventListener('click', () => {
+    window.api.pomodoro.reset()
+  })
+
+  window.api.pomodoro.onTimerUpdate((payload) => {
+    console.log('onTimerUpdate')
+    const { minutes, seconds } = payload
+
+    timerOutput.innerHTML = `${minutes.toString().padStart(2, 0)}:${seconds.toString().padStart(2, 0)}`
   })
 }
 
