@@ -1,27 +1,91 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Electron</title>
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
-    />
 
-    <link href="./assets/main.css" type="text/css" rel="stylesheet" />
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <title>Electron</title>
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:" />
 
-  <body>
-    <div id="app">
-      <div class="pomodoro-main">
-        <p class="timer">25:00</p>
-        <button type="button" data-action="pause">Pause</button>
-        <button type="button" data-action="start">Start</button>
-        <button type="button" data-action="reset">Reset</button>
+  <link href="./assets/main.css" type="text/css" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="app" data-mode="focus">
+    <div class="pomodoro-main">
+      <div class="clock">
+        <div class="clock__face">
+          <span class="clock__mode">Pomodoro #1</span>
+          <div class="clock__time timer">25:00</div>
+          <div class="clock__component">
+            <!-- Clock component -->
+            <div class="clock__component">
+              <svg class="clock__progress" width="300" height="300" viewBox="0 0 300 300">
+                <circle class="clock__progress-bg" cx="150" cy="150" r="145" fill="none" stroke="#e6e6e6"
+                  stroke-width="6" />
+                <!-- TODO: Update v-bind to JS handled code -->
+                <circle ref="progressCircle" class="clock__progress-value" cx="150" cy="150" r="145" fill="none"
+                  stroke="#f77a52" stroke-width="6" v-bind:style="radialProgress" />
+              </svg>
+              <!-- TODO: Update v-bind to JS handled code -->
+              <span class="clock__progress-circle" v-bind:style="{ transform: 'rotate('+ this.rotation+'turn)'}"></span>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <div class="pomo__progress pie__progress">
+        <!-- Pie Progress Components -->
+        <pie-progress></pie-progress>
+        <svg class="pie__component" height="64" width="64" viewBox="0 0 64 64">
+          <circle class="pie__bg" r="32" cx="32" cy="32" fill="white" />
+          <circle class="pie__progress" r="16" cx="32" cy="32" fill="transparent" stroke="tomato" stroke-width="32" />
+        </svg>
+        <svg class="pie__component" height="64" width="64" viewBox="0 0 64 64">
+          <circle class="pie__bg" r="32" cx="32" cy="32" fill="white" />
+          <circle class="pie__progress" r="16" cx="32" cy="32" fill="transparent" stroke="tomato" stroke-width="32" />
+        </svg>
+        <svg class="pie__component" height="64" width="64" viewBox="0 0 64 64">
+          <circle class="pie__bg" r="32" cx="32" cy="32" fill="white" />
+          <circle class="pie__progress" r="16" cx="32" cy="32" fill="transparent" stroke="tomato" stroke-width="32" />
+        </svg>
+        <svg class="pie__component" height="64" width="64" viewBox="0 0 64 64">
+          <circle class="pie__bg" r="32" cx="32" cy="32" fill="white" />
+          <circle class="pie__progress" r="16" cx="32" cy="32" fill="transparent" stroke="tomato" stroke-width="32" />
+        </svg>
+      </div>
+
+      <p class="message__below">Focus for 25 minutes</p>
+
+      <div class="controls">
+        <button class="trigger" data-action="pause" aria-label="Pause timer">
+          <svg class="trigger__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 47.607 47.607">
+            <path
+              d="M17.991 40.976a6.631 6.631 0 0 1-13.262 0V6.631a6.631 6.631 0 0 1 13.262 0v34.345zM42.877 40.976a6.631 6.631 0 0 1-13.262 0V6.631a6.631 6.631 0 0 1 13.262 0v34.345z" />
+          </svg>
+        </button>
+
+        <button class="trigger" data-action="start" aria-label="Start timer">
+          <svg class="trigger__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 47.604 47.604">
+            <path
+              d="M43.331 21.237L7.233.397a2.959 2.959 0 0 0-4.44 2.563v41.684a2.957 2.957 0 0 0 2.96 2.96c.511 0 1.022-.133 1.48-.397l36.098-20.84a2.964 2.964 0 0 0 0-5.13z" />
+          </svg>
+        </button>
+
+        <button class="trigger" data-action="reset" aria-label="Reset timer">
+          <svg class="trigger__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 74.999 74.999">
+            <path
+              d="M33.511 71.013c15.487 0 28.551-10.563 32.375-24.859h9.113L61.055 22 47.111 46.151h8.006c-3.44 8.563-11.826 14.628-21.605 14.628-12.837 0-23.28-10.443-23.28-23.28 0-12.836 10.443-23.28 23.28-23.28 6.604 0 12.566 2.768 16.809 7.196l5.258-9.108c-5.898-5.176-13.619-8.32-22.065-8.32C15.034 3.987 0 19.019 0 37.5c-.002 18.481 15.03 33.513 33.511 33.513z" />
+          </svg>
+        </button>
+      </div>
+      <!-- TODO: Add settings pane. -->
     </div>
 
-    <script type="module" src="./src/renderer.js"></script>
-  </body>
+  </div>
+
+  <script type="module" src="./src/renderer.js"></script>
+</body>
+
 </html>
