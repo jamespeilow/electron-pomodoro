@@ -9,17 +9,20 @@ class Pomodoro extends EventEmitter {
     }
     this.timerModes = {
       focus: {
+        type: 'focus',
         name: 'Focus',
         count: 0,
         duration: this.timerDurations.focus,
         roundProgress: [0, 0, 0, 0]
       },
       shortBreak: {
+        type: 'break',
         name: 'Short Break',
         duration: this.timerDurations.shortBreak,
         count: 0
       },
       longBreak: {
+        type: 'break',
         name: 'Long Break',
         duration: this.timerDurations.longBreak,
         count: 0
@@ -106,7 +109,10 @@ class Pomodoro extends EventEmitter {
   }
 
   handleEnd() {
-    this.emit('end')
+    this.emit('end', {
+      currentMode: this.currentMode,
+      nextMode: this.nextMode
+    })
     this.setNextTimer()
   }
 }

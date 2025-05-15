@@ -7,6 +7,7 @@ function init() {
 }
 
 function initPomodoro() {
+  const app = document.querySelector('#app')
   const pauseButton = document.querySelector('button[data-action=pause]')
   const startButton = document.querySelector('button[data-action=start]')
   const resetButton = document.querySelector('button[data-action=reset]')
@@ -26,6 +27,13 @@ function initPomodoro() {
     console.log('onTimerUpdate')
 
     timerOutput.innerHTML = payload.formatted
+  })
+
+  window.api.pomodoro.onSessionEnd((payload) => {
+    console.log('onSessionEnd')
+
+    const nextModeType = payload.nextMode.type
+    app.dataset.mode = nextModeType
   })
 }
 

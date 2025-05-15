@@ -6,10 +6,16 @@ const api = {
     start: () => ipcRenderer.send('pomodoro:start'),
     pause: () => ipcRenderer.send('pomodoro:pause'),
     reset: () => ipcRenderer.send('pomodoro:reset'),
-    onTimerUpdate: (callback) =>
+    onTimerUpdate: (callback) => {
       ipcRenderer.on('pomodoro:update', (_event, payload) => {
         callback(payload)
       })
+    },
+    onSessionEnd: (callback) => {
+      ipcRenderer.on('pomodoro:end', (_event, payload) => {
+        callback(payload)
+      })
+    }
   }
 }
 

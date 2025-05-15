@@ -126,7 +126,7 @@ app.whenReady().then(() => {
     }
   })
 
-  pomodoroTimer.on('end', () => {
+  pomodoroTimer.on('end', (payload) => {
     console.log('pomodoro ended')
 
     if (Notification.isSupported()) {
@@ -136,6 +136,10 @@ app.whenReady().then(() => {
         sound: 'Glass.aiff'
       })
       notification.show()
+    }
+
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('pomodoro:end', payload)
     }
   })
 })
