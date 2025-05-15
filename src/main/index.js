@@ -18,8 +18,10 @@ function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 400,
-    height: 670,
+    height: 700,
     show: false,
+    minWidth: 400,
+    minHeight: 700,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
