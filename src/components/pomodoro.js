@@ -2,10 +2,53 @@ import { EventEmitter } from 'events'
 class Pomodoro extends EventEmitter {
   constructor() {
     super()
+    this.timerDurations = {
+      focus: 0.25,
+      shortBreak: 0.5,
+      longBreak: 0.15
+    }
+    this.timerModes = {
+      focus: {
+        name: 'Focus',
+        count: 0,
+        duration: this.timerDurations.focus,
+        roundProgress: [0, 0, 0, 0]
+      },
+      shortBreak: {
+        name: 'Short Break',
+        duration: this.timerDurations.shortBreak,
+        count: 0
+      },
+      longBreak: {
+        name: 'Long Break',
+        duration: this.timerDurations.longBreak,
+        count: 0
+      }
+    }
+    this.currentMode = this.timerModes.focus
+    this.nextMode = this.timerModes.shortBreak
     this.defaultTime = 25 * 60
-    this.remainingTime = this.defaultTime
+    this.remainingTime = this.currentMode.duration * 60
     this.interval = null
     this.updateUI()
+  }
+
+  setNextTimer() {
+    this.currentMode.count++
+    this.currentMode = this.nextMode
+    this.nextMode = this.getNextMode()
+  }
+
+  getNextMode() {
+    if (this.currentMode !== this.timerModes.focus) {
+      return this.timerModes.focus
+    }
+
+    if ((this.timerModes.focus.count + 1) % 4 === 0 && this.timerModes.focus.count !== 0) {
+      return this.timerModes.longBreak
+    }
+
+    return this.timerModes.shortBreak
   }
 
   start() {
@@ -33,7 +76,7 @@ class Pomodoro extends EventEmitter {
 
   reset() {
     this.pause()
-    this.remainingTime = this.defaultTime
+    this.remainingTime = this.currentMode.duration * 60
     this.updateUI()
   }
 
@@ -50,7 +93,8 @@ class Pomodoro extends EventEmitter {
   updateUI() {
     const payload = {
       data: this.remainingTimeObject(),
-      formatted: this.formatTime()
+      formatted: this.formatTime(),
+      modes: this.timerModes
     }
     this.emit('update', payload)
   }
@@ -63,6 +107,7 @@ class Pomodoro extends EventEmitter {
 
   handleEnd() {
     this.emit('end')
+    this.setNextTimer()
   }
 }
 
