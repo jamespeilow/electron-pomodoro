@@ -89,7 +89,9 @@ class Pomodoro extends EventEmitter {
 
     return {
       minutes,
-      seconds
+      seconds,
+      remainingTime: this.remainingTime,
+      totalTime: this.currentMode.duration * 60
     }
   }
 

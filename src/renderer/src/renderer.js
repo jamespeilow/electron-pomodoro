@@ -1,7 +1,5 @@
 function init() {
   window.addEventListener('DOMContentLoaded', () => {
-    doAThing()
-
     initPomodoro()
   })
 }
@@ -11,7 +9,6 @@ function initPomodoro() {
   const pauseButton = document.querySelector('button[data-action=pause]')
   const startButton = document.querySelector('button[data-action=start]')
   const resetButton = document.querySelector('button[data-action=reset]')
-  const timerOutput = document.querySelector('.timer')
 
   pauseButton.addEventListener('click', () => {
     window.api.pomodoro.pause()
@@ -26,7 +23,7 @@ function initPomodoro() {
   window.api.pomodoro.onTimerUpdate((payload) => {
     console.log('onTimerUpdate')
 
-    timerOutput.innerHTML = payload.formatted
+    updateUI(payload)
   })
 
   window.api.pomodoro.onSessionEnd((payload) => {
@@ -37,23 +34,20 @@ function initPomodoro() {
   })
 }
 
-function doAThing() {
-  const versions = window.versions
-  replaceText('.electron-version', `Electron v${versions.electron()}`)
-  replaceText('.chrome-version', `Chromium v${versions.chrome()}`)
-  replaceText('.node-version', `Node v${versions.node()}`)
+function updateUI(timeData) {
+  const percentageNumber =
+    (timeData.data.totalTime - timeData.data.remainingTime) / timeData.data.totalTime
+  const timerOutput = document.querySelector('.timer')
+  timerOutput.innerHTML = timeData.formatted
 
-  const ipcHandlerBtn = document.getElementById('ipcHandler')
-  ipcHandlerBtn?.addEventListener('click', () => {
-    window.ipcTest.ping()
-  })
-}
+  const timerCircle = document.querySelector('.clock__progress-value')
+  const timerCircleCircumference = timerCircle.getTotalLength()
+  timerCircle.style.strokeDasharray = timerCircleCircumference
+  timerCircle.style.strokeDashoffset =
+    timerCircleCircumference - percentageNumber * timerCircleCircumference
 
-function replaceText(selector, text) {
-  const element = document.querySelector(selector)
-  if (element) {
-    element.innerText = text
-  }
+  const timerDot = document.querySelector('.clock__progress-circle')
+  timerDot.style.transform = `rotate(${percentageNumber}turn)`
 }
 
 init()

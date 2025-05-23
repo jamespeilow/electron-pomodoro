@@ -12,7 +12,7 @@
 </head>
 
 <body>
-  <div id="app" data-mode="focus">
+  <div id="app" data-mode="focus" data-state="paused">
     <div class="pomodoro-main">
       <div class="clock">
         <div class="clock__face">
@@ -24,12 +24,10 @@
               <svg class="clock__progress" width="300" height="300" viewBox="0 0 300 300">
                 <circle class="clock__progress-bg" cx="150" cy="150" r="145" fill="none" stroke="#e6e6e6"
                   stroke-width="6" />
-                <!-- TODO: Update v-bind to JS handled code -->
                 <circle ref="progressCircle" class="clock__progress-value" cx="150" cy="150" r="145" fill="none"
-                  stroke="#f77a52" stroke-width="6" v-bind:style="radialProgress" />
+                  stroke="#f77a52" stroke-width="6" style="stroke-dasharray: 910.694; stroke-dashoffset: 910.694;" />
               </svg>
-              <!-- TODO: Update v-bind to JS handled code -->
-              <span class="clock__progress-circle" v-bind:style="{ transform: 'rotate('+ this.rotation+'turn)'}"></span>
+              <span class="clock__progress-circle"></span>
             </div>
           </div>
         </div>
