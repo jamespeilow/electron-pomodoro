@@ -33,6 +33,7 @@ class Pomodoro extends EventEmitter {
     this.defaultTime = 25 * 60
     this.remainingTime = this.currentMode.duration * 60
     this.interval = null
+    this.state = 'paused'
     this.updateUI()
   }
 
@@ -59,6 +60,9 @@ class Pomodoro extends EventEmitter {
       return
     }
 
+    this.state = 'running'
+    this.emit('stateChange', this.state)
+
     this.interval = setInterval(() => {
       if (this.remainingTime > 0) {
         this.remainingTime--
@@ -72,8 +76,10 @@ class Pomodoro extends EventEmitter {
 
   pause() {
     if (this.interval) {
+      this.state = 'paused'
       clearInterval(this.interval)
       this.interval = null
+      this.emit('stateChange', this.state)
     }
   }
 
@@ -99,7 +105,8 @@ class Pomodoro extends EventEmitter {
     const payload = {
       data: this.remainingTimeObject(),
       formatted: this.formatTime(),
-      modes: this.timerModes
+      modes: this.timerModes,
+      state: this.state
     }
     this.emit('update', payload)
   }

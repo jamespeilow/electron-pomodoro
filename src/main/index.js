@@ -126,9 +126,13 @@ app.whenReady().then(() => {
     }
   })
 
-  pomodoroTimer.on('end', (payload) => {
-    console.log('pomodoro ended')
+  pomodoroTimer.on('stateChange', (payload) => {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('pomodoro:stateChange', payload)
+    }
+  })
 
+  pomodoroTimer.on('end', (payload) => {
     if (Notification.isSupported()) {
       const notification = new Notification({
         title: 'Pomodoro Complete! ✅',

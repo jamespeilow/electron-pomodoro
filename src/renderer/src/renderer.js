@@ -26,6 +26,10 @@ function initPomodoro() {
     updateUI(payload)
   })
 
+  window.api.pomodoro.onStateChange((payload) => {
+    app.dataset.state = payload
+  })
+
   window.api.pomodoro.onSessionEnd((payload) => {
     console.log('onSessionEnd')
 

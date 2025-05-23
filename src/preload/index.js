@@ -11,6 +11,11 @@ const api = {
         callback(payload)
       })
     },
+    onStateChange: (callback) => {
+      ipcRenderer.on('pomodoro:stateChange', (_event, payload) => {
+        callback(payload)
+      })
+    },
     onSessionEnd: (callback) => {
       ipcRenderer.on('pomodoro:end', (_event, payload) => {
         callback(payload)

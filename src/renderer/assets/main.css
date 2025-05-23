@@ -199,14 +199,17 @@ body {
 .controls {
   display: flex;
   font-size: 14px;
+  gap: 1rem;
   justify-content: center;
   padding-top: 42px;
 }
-.controls button {
-  margin-left: 15px;
+
+[data-state=paused] .controls [data-action=pause] {
+  display: none;
 }
-.controls button:first-child {
-  margin-left: 0;
+
+[data-state=running] .controls [data-action=start] {
+  display: none;
 }
 
 .pie-progress {
