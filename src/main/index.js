@@ -148,6 +148,7 @@ app.whenReady().then(() => {
   ipcMain.on('pomodoro:start', () => pomodoroTimer.start())
   ipcMain.on('pomodoro:pause', () => pomodoroTimer.pause())
   ipcMain.on('pomodoro:reset', () => pomodoroTimer.reset())
+  ipcMain.on('pomodoro:getLatestUI', () => pomodoroTimer.updateUI())
 
   // Handle settings updates
   ipcMain.on('settings:update', (_, settings) => {

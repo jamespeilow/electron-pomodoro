@@ -37,6 +37,8 @@ function initPomodoro() {
     const nextModeType = payload.nextMode.type
     app.dataset.mode = nextModeType
   })
+
+  window.api.pomodoro.getLatestUI()
 }
 
 function updateUI(timeData) {

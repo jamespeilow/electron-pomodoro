@@ -20,7 +20,8 @@ const api = {
       ipcRenderer.on('pomodoro:end', (_event, payload) => {
         callback(payload)
       })
-    }
+    },
+    getLatestUI: () => ipcRenderer.send('pomodoro:getLatestUI')
   },
   settings: {
     update: (settings) => ipcRenderer.send('settings:update', settings),
