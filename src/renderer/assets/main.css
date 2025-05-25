@@ -31,6 +31,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow: hidden;
   padding: 80px 60px 50px;
   position: relative;
   text-align: center;
