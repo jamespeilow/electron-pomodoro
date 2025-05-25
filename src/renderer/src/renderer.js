@@ -22,8 +22,6 @@ function initPomodoro() {
   })
 
   window.api.pomodoro.onTimerUpdate((payload) => {
-    console.log('onTimerUpdate')
-
     updateUI(payload)
   })
 
@@ -42,6 +40,8 @@ function initPomodoro() {
 }
 
 function updateUI(timeData) {
+  const app = document.querySelector('#app')
+  app.dataset.state = timeData.state
   const percentageNumber =
     (timeData.data.totalTime - timeData.data.remainingTime) / timeData.data.totalTime
   const timerOutput = document.querySelector('.timer')
