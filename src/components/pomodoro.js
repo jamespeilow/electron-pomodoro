@@ -2,39 +2,48 @@ import { EventEmitter } from 'events'
 class Pomodoro extends EventEmitter {
   constructor() {
     super()
-    this.timerDurations = {
-      focus: 0.25,
-      shortBreak: 0.5,
-      longBreak: 0.15
+    this.settings = {
+      focusDuration: 25,
+      shortBreakDuration: 5,
+      longBreakDuration: 15
     }
-    this.timerModes = {
+    this.timerConfig = {
       focus: {
         type: 'focus',
         name: 'Focus',
         count: 0,
-        duration: this.timerDurations.focus,
+        duration: this.settings.focusDuration,
         roundProgress: [0, 0, 0, 0]
       },
       shortBreak: {
         type: 'break',
         name: 'Short Break',
-        duration: this.timerDurations.shortBreak,
+        duration: this.settings.shortBreakDuration,
         count: 0
       },
       longBreak: {
         type: 'break',
         name: 'Long Break',
-        duration: this.timerDurations.longBreak,
+        duration: this.settings.longBreakDuration,
         count: 0
       }
     }
-    this.currentMode = this.timerModes.focus
-    this.nextMode = this.timerModes.shortBreak
+
+    this.updateTimerConfig()
+
+    this.currentMode = this.timerConfig.focus
+    this.nextMode = this.timerConfig.shortBreak
     this.defaultTime = 25 * 60
     this.remainingTime = this.currentMode.duration * 60
     this.interval = null
     this.state = 'paused'
     this.updateUI()
+  }
+
+  updateTimerConfig() {
+    this.timerConfig.focus.duration = this.settings.focusDuration
+    this.timerConfig.shortBreak.duration = this.settings.shortBreakDuration
+    this.timerConfig.longBreak.duration = this.settings.longBreakDuration
   }
 
   setNextTimer() {
@@ -44,15 +53,15 @@ class Pomodoro extends EventEmitter {
   }
 
   getNextMode() {
-    if (this.currentMode !== this.timerModes.focus) {
-      return this.timerModes.focus
+    if (this.currentMode !== this.timerConfig.focus) {
+      return this.timerConfig.focus
     }
 
-    if ((this.timerModes.focus.count + 1) % 4 === 0 && this.timerModes.focus.count !== 0) {
-      return this.timerModes.longBreak
+    if ((this.timerConfig.focus.count + 1) % 4 === 0 && this.timerConfig.focus.count !== 0) {
+      return this.timerConfig.longBreak
     }
 
-    return this.timerModes.shortBreak
+    return this.timerConfig.shortBreak
   }
 
   start() {
@@ -105,7 +114,7 @@ class Pomodoro extends EventEmitter {
     const payload = {
       data: this.remainingTimeObject(),
       formatted: this.formatTime(),
-      modes: this.timerModes,
+      modes: this.timerConfig,
       state: this.state
     }
     this.emit('update', payload)
@@ -123,6 +132,18 @@ class Pomodoro extends EventEmitter {
       nextMode: this.nextMode
     })
     this.setNextTimer()
+  }
+
+  updateSettings(newSettings) {
+    this.settings = { ...this.settings, ...newSettings }
+    this.updateTimerConfig()
+
+    // If timer is paused, update the remaining time for the current mode
+    if (this.state === 'paused') {
+      this.remainingTime = this.currentMode.duration * 60
+    }
+
+    this.updateUI()
   }
 }
 

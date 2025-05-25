@@ -1,6 +1,7 @@
 function init() {
   window.addEventListener('DOMContentLoaded', () => {
     initPomodoro()
+    initSettings()
   })
 }
 
@@ -52,6 +53,47 @@ function updateUI(timeData) {
 
   const timerDot = document.querySelector('.clock__progress-circle')
   timerDot.style.transform = `rotate(${percentageNumber}turn)`
+}
+
+function initSettings() {
+  // Settings Panel Logic
+  const settingsToggle = document.querySelector('.settings-toggle')
+  const settingsPanel = document.querySelector('.settings-panel')
+  const settingsForm = document.querySelector('.settings-form')
+
+  settingsToggle.addEventListener('click', () => {
+    settingsPanel.classList.toggle('active')
+  })
+
+  settingsForm.addEventListener('submit', (event) => {
+    event.preventDefault()
+    const settings = {
+      focusDuration: parseInt(settingsForm.querySelector('[name="focusDuration"]').value, 10),
+      shortBreakDuration: parseInt(
+        settingsForm.querySelector('[name="shortBreakDuration"]').value,
+        10
+      ),
+      longBreakDuration: parseInt(
+        settingsForm.querySelector('[name="longBreakDuration"]').value,
+        10
+      )
+    }
+
+    console.log('Updating settings:', settings)
+
+    window.api.settings.update(settings)
+    settingsPanel.classList.remove('active')
+  })
+
+  // Listen for settings updates
+  window.api.settings.onSettingsUpdated((settings) => {
+    Object.entries(settings).forEach(([key, value]) => {
+      const input = settingsForm.querySelector(`[name="${key}"]`)
+      if (input) {
+        input.value = value
+      }
+    })
+  })
 }
 
 init()

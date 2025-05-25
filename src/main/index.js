@@ -149,6 +149,14 @@ app.whenReady().then(() => {
   ipcMain.on('pomodoro:pause', () => pomodoroTimer.pause())
   ipcMain.on('pomodoro:reset', () => pomodoroTimer.reset())
 
+  // Handle settings updates
+  ipcMain.on('settings:update', (_, settings) => {
+    pomodoroTimer.updateSettings(settings)
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('settings:updated', settings)
+    }
+  })
+
   // Handle Pomodoro Events
   pomodoroTimer.on('update', (payload) => {
     if (mainWindow && !mainWindow.isDestroyed()) {

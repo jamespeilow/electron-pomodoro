@@ -21,9 +21,16 @@ const api = {
         callback(payload)
       })
     }
+  },
+  settings: {
+    update: (settings) => ipcRenderer.send('settings:update', settings),
+    onSettingsUpdated: (callback) => {
+      ipcRenderer.on('settings:updated', (_event, settings) => {
+        callback(settings)
+      })
+    }
   }
 }
-
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
 // just add to the DOM global.

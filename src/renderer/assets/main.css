@@ -47,49 +47,91 @@ body {
   --color-text-white: #ffffff;
 }
 
-/* .settings__toggle {
-  width: 25px;
+/* Settings Panel Styles */
+.settings-toggle {
   position: absolute;
-  top: 33px;
-  right: 44px;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
   cursor: pointer;
-  z-index: 10;
+  padding: 0.5rem;
+  color: var(--color-brand);
+  transition: color 0.2s;
+  z-index: 200;
 }
-.settings__toggle path {
-  fill: var(--color-text-button);
+
+.settings-icon {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
 }
-.settings__toggle.open path {
-  fill: var(--color-text-white);
-}
-.settings__menu {
+
+.settings-panel {
   position: absolute;
-  top: 0;
   left: 0;
-  background: var(--color-brand);
-  border-radius: 15px;
-  color: var(--color-text-white);
-  padding: 60px;
+  bottom: -100%;
   width: 100%;
   height: 100%;
-  z-index: 9;
+  background: white;
+  padding: 2rem;
+  transition: bottom 0.3s ease-in-out;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  z-index: 100;
 }
 
-.input-group {
-  display: grid;
-  grid-gap: 15px;
-  grid-template-columns: 70% 30%;
-  text-align: left;
-  margin-bottom: 15px;
-}
-.input-group .settings-input {
-  width: 100%;
-  text-align: center;
+.settings-panel.active {
+  bottom: 0;
 }
 
-.stats {
+.settings-panel h2 {
+  margin: 0 0 2rem;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.settings-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.settings-group label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: #111;
+  font-size: .75rem;
+  align-items: start;;
+}
+
+.settings-group input {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
   width: 100%;
 }
-*/
+
+.settings-actions {
+  display: flex;
+}
+
+.settings-save {
+  background: var(--color-bg);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.settings-save:hover {
+  background: var(--color-brand);
+}
 
 .clock {
   width: 280px;
