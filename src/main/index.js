@@ -73,6 +73,25 @@ function createTray() {
       click: () => {
         pomodoroTimer.reset()
       }
+    },
+    { type: 'separator' },
+    {
+      label: 'Show Window',
+      type: 'normal',
+      click: () => {
+        if (!mainWindow || mainWindow.isDestroyed()) {
+          createWindow()
+        } else {
+          mainWindow.show()
+        }
+      }
+    },
+    {
+      label: 'Quit',
+      type: 'normal',
+      click: () => {
+        app.quit()
+      }
     }
   ])
 
