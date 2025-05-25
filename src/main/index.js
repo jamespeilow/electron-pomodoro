@@ -172,8 +172,8 @@ app.whenReady().then(() => {
   pomodoroTimer.on('stateChange', (payload) => {
     if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.webContents.send('pomodoro:stateChange', payload)
-      updateTrayMenu({ state: payload })
     }
+    updateTrayMenu({ state: payload })
   })
 
   pomodoroTimer.on('end', (payload) => {
