@@ -52,21 +52,33 @@ function createTray() {
   const trayIcon = nativeImage.createEmpty()
   tray = new Tray(trayIcon)
 
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: 'Start',
-      type: 'normal',
-      click: () => {
-        pomodoroTimer.start()
-      }
-    },
-    {
-      label: 'Pause',
-      type: 'normal',
-      click: () => {
-        pomodoroTimer.pause()
-      }
-    },
+  const contextMenu = Menu.buildFromTemplate(getContextMenuTemplate())
+
+  tray.setToolTip('Pomodoro')
+  tray.setTitle('25:00')
+  tray.setContextMenu(contextMenu)
+}
+
+function getContextMenuTemplate({ state = 'paused' } = {}) {
+  return [
+    state === 'paused'
+      ? {
+          label: 'Start',
+          type: 'normal',
+          click: () => {
+            pomodoroTimer.start()
+          }
+        }
+      : false,
+    state === 'running'
+      ? {
+          label: 'Pause',
+          type: 'normal',
+          click: () => {
+            pomodoroTimer.pause()
+          }
+        }
+      : false,
     {
       label: 'Reset',
       type: 'normal',
@@ -93,11 +105,14 @@ function createTray() {
         app.quit()
       }
     }
-  ])
+  ].filter(Boolean)
+}
 
-  tray.setToolTip('Pomodoro')
-  tray.setTitle('25:00')
-  tray.setContextMenu(contextMenu)
+function updateTrayMenu({ state = 'paused' } = {}) {
+  if (tray) {
+    const contextMenu = Menu.buildFromTemplate(getContextMenuTemplate({ state }))
+    tray.setContextMenu(contextMenu)
+  }
 }
 
 // This method will be called when Electron has finished
@@ -148,6 +163,7 @@ app.whenReady().then(() => {
   pomodoroTimer.on('stateChange', (payload) => {
     if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.webContents.send('pomodoro:stateChange', payload)
+      updateTrayMenu({ state: payload })
     }
   })
 
